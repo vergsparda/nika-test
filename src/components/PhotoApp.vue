@@ -1,26 +1,36 @@
 <template>
   <div class="wrap">
     <h1 class="title">{{ msg }}</h1>
-    <div class="buttons">
-        <button class="button" :class="{ active: isCatalogActive }" @click="switchToCatalog">
-          Каталог
-        </button>
-        <button class="button" :class="{ active: isFavoriteActive }" @click="switchToFavorite">
-          ☆ Избранное
-        </button>
-    </div>
-    <div class="content">
-      <div class="list" v-show="isCatalogActive"> List</div>
-      <div class="favorites" v-show="isFavoriteActive">Favorites</div>
+    <div class="body">
+      <div class="buttons">
+          <button class="button" :class="{ active: isCatalogActive }" @click="switchToCatalog">
+            Каталог
+          </button>
+          <button class="button" :class="{ active: isFavoriteActive }" @click="switchToFavorite">
+            ☆ Избранное
+          </button>
+      </div>
+      <div class="content">
+        <div class="list" v-show="isCatalogActive">
+          <PersonList  :list="personList"/>
+        </div>
+        <div class="favorites" v-show="isFavoriteActive">Favorites</div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import PersonList from './personList.vue';
+
 export default {
   name: 'PhotoApp',
   props: {
     msg: String,
+  },
+
+  components: {
+    PersonList,
   },
 
   data() {
@@ -79,11 +89,13 @@ export default {
     margin: 0;
     padding-top: 40px;
   }
+  .body {
+    box-shadow: 0px 10px 10px 0px rgba(0, 0, 0, 0.5);
+    background-color: none;
+    border-radius: 10px;
+  }
   .content {
-    // margin: 30px 0;
     background-color: #fff;
-    border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px;
     min-height: calc(100vh - 200px);
   }
   .buttons {
@@ -91,7 +103,6 @@ export default {
     justify-content: center;
   }
   .button {
-    margin-top: 20px;
     padding: 20px 0 20px;
     background-color: #a7c0d2;
     width: 100%;

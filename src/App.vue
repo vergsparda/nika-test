@@ -8,8 +8,7 @@ import PhotoApp from './components/PhotoApp.vue';
 export default {
   name: 'App',
   components: {
-    PhotoApp
-    ,
+    PhotoApp,
   },
 };
 </script>
