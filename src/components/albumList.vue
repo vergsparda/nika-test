@@ -1,16 +1,15 @@
 <template>
-    <li class="list-item" v-for="person in list" :key="person.id">
-        <PersonItem :person="person"/>
+    <li class="album-item" v-for="album in albums" :key="album.id">
+        <AlbumItem :album="album"/>
     </li>
-  </template>
-
+</template>
 <script>
-import PersonItem from './personItem.vue';
+import AlbumItem from './albumItem.vue';
 
 export default {
-  name: 'PersonList',
+  name: 'AlbumList',
   props: {
-    list: {
+    albums: {
       type: Array,
       default() {
         return [];
@@ -19,7 +18,7 @@ export default {
   },
 
   components: {
-    PersonItem,
+    AlbumItem,
   },
 
   data() {
@@ -29,17 +28,15 @@ export default {
   methods: {},
 
   mounted() {},
-
 };
 </script>
-
 <style lang="scss">
 .list {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
 
-    .list-item {
+    .album-item {
         width: 100%;
         text-align: left;
     }

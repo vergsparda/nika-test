@@ -11,8 +11,11 @@
           </button>
       </div>
       <div class="content">
-        <div class="list" v-show="isCatalogActive">
-          <PersonList  :list="personList"/>
+        <div class="persons" v-show="isCatalogActive">
+          <ul class="list" v-show="isShowPersonList">
+            <PersonList  :list="personList"/>
+          </ul>
+          <span class="no-list" v-show="!isShowPersonList">Пользователи не найдены</span>
         </div>
         <div class="favorites" v-show="isFavoriteActive">Favorites</div>
       </div>
@@ -42,6 +45,7 @@ export default {
       photosUrl: 'http://jsonplaceholder.typicode.com/photos?albumId=21',
       isCatalogActive: true,
       isFavoriteActive: false,
+      isShowPersonList: false,
     };
   },
 
@@ -69,21 +73,21 @@ export default {
   },
 
   mounted() {
-    this.getPersonList('http://jsonplaceholder.typicode.com/users').then((res) => { this.personList = res; });
-    // this.getDataList(this.albumsUrl).then((res) => { this.albumsList = res; });
-    // this.getDataList(this.photosUrl).then((res) => { this.photoList = res; });
+    this.getPersonList('http://jsonplaceholder.typicode.com/users')
+      .then((res) => {
+        this.personList = res;
+        this.isShowPersonList = true;
+      });
   },
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="scss">
+<style lang="scss" scoped>
 
 .wrap {
-  margin: 50px 0 ;
   max-width: 900px;
-  margin: 0 auto 0;
-  height: 100vh;
+  margin: 0 auto;
+  padding-bottom: 30px;
 
   .title {
     margin: 0;
@@ -91,12 +95,10 @@ export default {
   }
   .body {
     box-shadow: 0px 10px 10px 0px rgba(0, 0, 0, 0.5);
-    background-color: none;
     border-radius: 10px;
   }
   .content {
     background-color: #fff;
-    min-height: calc(100vh - 200px);
   }
   .buttons {
     display: flex;
@@ -105,14 +107,9 @@ export default {
   .button {
     padding: 20px 0 20px;
     background-color: #a7c0d2;
-    width: 100%;
-    cursor: pointer;
-    text-decoration: none;
-    border: none;
-    text-align: center;
     font-size: 16px;
     line-height: 16px;
-    font-family: inherit;
+    justify-content: center;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
 
@@ -127,6 +124,12 @@ export default {
     &.active {
       background-color: #fff;
     }
+  }
+
+  .list {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
   }
 }
 </style>

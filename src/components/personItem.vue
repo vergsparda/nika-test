@@ -1,20 +1,26 @@
 <template>
-    <div class="person">
-        <button class="person-checkbox" for="person" :onClick="openPerson">
-            <img
-                class="icon" v-show="isOpen"
-                src="../assets/icon-minus.png"
-                alt="" width="30" height="30">
-            <img
-                class="icon" v-show="!isOpen"
-                src="../assets/icon-plus.svg"
-                alt="" width="30" height="30">
-            <span class="name">{{ person.name }}</span>
-        </button>
-    </div>
+  <div class="person">
+    <button class="button person-button" for="person" :onClick="openPerson">
+      <img
+        class="icon"
+        v-show="isOpen"
+        src="../assets/icon-minus.png"
+        alt="" width="30" height="30">
+      <img
+        class="icon"
+        v-show="!isOpen"
+        src="../assets/icon-plus.png" alt="" width="30" height="30">
+      <span class="name">{{ person.name }}</span>
+    </button>
+    <ul class="album-list" v-show="isShowAlbums && isOpen">
+      <AlbumList :albums="albums" />
+    </ul>
+  </div>
 </template>
 
 <script>
+import AlbumList from './albumList.vue';
+
 export default {
   name: 'personItem',
   props: {
@@ -26,46 +32,71 @@ export default {
     },
   },
 
+  components: {
+    AlbumList,
+  },
+
   data() {
     return {
       isOpen: false,
+      albums: null,
+      isShowAlbums: false,
     };
   },
 
   methods: {
     openPerson() {
-      this.isOpen = !this.isOpen;
+      if (this.isOpen) {
+        this.isOpen = false;
+      } else {
+        const url = `http://jsonplaceholder.typicode.com/albums?userId=${this.person.id}`;
+        this.getAlbumsList(url)
+          .then((res) => {
+            this.albums = res;
+            this.isShowAlbums = true;
+          });
+
+        this.isOpen = true;
+      }
     },
+
+    async getAlbumsList(url) {
+      try {
+        const response = await fetch(url);
+        const list = response.json();
+        return list;
+      } catch (err) {
+        console.log(`error ${err}`);
+        return null;
+      }
+    },
+  },
+
+  mounted() {
   },
 };
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .person {
-    cursor: pointer;
-    padding: 20px 5px 20px 70px;
-    border-bottom: solid 0.5px #eeeeee;
-
-    .person-checkbox {
-        display: flex;
+    .person-button {
         font-size: 22px;
-        width: 100%;
-        cursor: pointer;
-        border: none;
-        text-align: left;
         background-color: unset;
-        align-items: center;
-    }
+        padding: 20px 5px 20px 70px;
+        border-bottom: solid 0.5px #eeeeee;
 
-    &:hover {
+        &:hover {
         background-color: #dae4ef;
-    }
-
-    .input {
-        display: none;
+      }
     }
 
     .icon {
         padding-right: 15px;
     }
+
+    .album-list {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
 }
 </style>
