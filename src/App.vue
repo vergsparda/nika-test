@@ -40,4 +40,12 @@ button {
     background-color: #dae4ef;
   }
 }
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
 </style>

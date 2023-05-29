@@ -1,15 +1,15 @@
 <template>
-    <li class="album-item" v-for="album in albums" :key="album.id">
-        <AlbumItem :album="album"/>
+    <li class="photo-item" v-for="photo in photosList" :key="photo.id">
+        <PhotoItem :photo="photo"/>
     </li>
 </template>
 <script>
-import AlbumItem from './albumItem.vue';
+import PhotoItem from './photoItem.vue';
 
 export default {
   name: 'AlbumList',
   props: {
-    albums: {
+    photosList: {
       type: Array,
       default() {
         return [];
@@ -18,7 +18,7 @@ export default {
   },
 
   components: {
-    AlbumItem,
+    PhotoItem,
   },
 
   data() {
@@ -31,8 +31,14 @@ export default {
 };
 </script>
 <style lang="scss">
-.album-item {
+.list {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    .album-item {
         width: 100%;
         text-align: left;
+    }
 }
 </style>

@@ -71,9 +71,6 @@ export default {
       }
     },
   },
-
-  mounted() {
-  },
 };
 </script>
 <style lang="scss" scoped>
@@ -92,11 +89,5 @@ export default {
     .icon {
         padding-right: 15px;
     }
-
-    .album-list {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-  }
 }
 </style>

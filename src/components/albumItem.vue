@@ -1,6 +1,6 @@
 <template>
   <div class="album">
-    <button class="button album-button" :onClick="openAlbum">
+    <button class="button album-button" :onClick="handleOpenAlbum">
       <img
         class="icon"
         v-show="isOpen"
@@ -12,12 +12,14 @@
         src="../assets/icon-plus.png" alt="" width="30" height="30">
       <span class="name">{{ album.title }}</span>
     </button>
-    <!-- <ul class="album-list" v-show="isShowAlbums">
-      <AlbumList :albums="albums" />
-    </ul> -->
+    <ul class="photo-list" v-show="isShowPhotos && isOpen">
+      <PhotoList :photosList="photosList" />
+    </ul>
   </div>
 </template>
 <script>
+import PhotoList from './photoList.vue';
+
 export default {
   name: 'albumItem',
   props: {
@@ -30,39 +32,45 @@ export default {
   },
 
   components: {
+    PhotoList,
   },
 
   data() {
     return {
       isOpen: false,
-      albums: null,
+      photoList: null,
+      isShowPhotos: false,
+      photosList: null,
     };
   },
 
   methods: {
-    openAlbum() {
-      this.isOpen = !this.isOpen;
+    handleOpenAlbum() {
+      if (this.isOpen) {
+        this.isOpen = !this.isOpen;
+      } else {
+        const url = `http://jsonplaceholder.typicode.com/photos?albumId=${this.album.id}`;
+        this.getPhotoList(url)
+          .then((res) => {
+            console.log(res);
+            this.photosList = res;
+            this.isShowPhotos = true;
+          });
+
+        this.isOpen = true;
+      }
     },
 
-    // async getAlbumsList(url) {
-    //   try {
-    //     const response = await fetch(url);
-    //     const list = response.json();
-    //     return list;
-    //   } catch (err) {
-    //     console.log(`error ${err}`);
-    //     return null;
-    //   }
-    // },
-  },
-
-  mounted() {
-    // const url = `http://jsonplaceholder.typicode.com/albums?userId=${this.person.id}`;
-    // this.getAlbumsList(url)
-    //   .then((res) => {
-    //     this.albums = res;
-    //     this.isShowAlbums = true;
-    //   });
+    async getPhotoList(url) {
+      try {
+        const response = await fetch(url);
+        const list = response.json();
+        return list;
+      } catch (err) {
+        console.log(`error ${err}`);
+        return null;
+      }
+    },
   },
 };
 </script>
@@ -80,6 +88,15 @@ export default {
 
     .icon {
         padding-right: 15px;
+    }
+
+    .photo-list {
+      flex-direction: row;
+      flex-wrap: wrap;
+      margin: 0 auto;
+      max-width: calc((150px * 3) + (40px * 2));
+      gap: 40px;
+      padding: 40px 0;
     }
 }
 
