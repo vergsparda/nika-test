@@ -52,7 +52,6 @@ export default {
         const url = `http://jsonplaceholder.typicode.com/photos?albumId=${this.album.id}`;
         this.getPhotoList(url)
           .then((res) => {
-            console.log(res);
             this.photosList = res;
             this.isShowPhotos = true;
           });

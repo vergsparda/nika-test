@@ -20,6 +20,7 @@
         <div class="favorites" v-show="isFavoriteActive">Favorites</div>
       </div>
     </div>
+    <button class="popup" @click="handlePopup"></button>
   </div>
 </template>
 
@@ -70,6 +71,11 @@ export default {
       this.isFavoriteActive = false;
       this.isCatalogActive = true;
     },
+
+    handlePopup() {
+      const popup = document.querySelector('.popup');
+      popup.classList.toggle('active');
+    },
   },
 
   mounted() {
@@ -85,6 +91,7 @@ export default {
 <style lang="scss" scoped>
 
 .wrap {
+  position: relative;
   max-width: 900px;
   margin: 0 auto;
   padding-bottom: 30px;
@@ -125,5 +132,23 @@ export default {
       background-color: #fff;
     }
   }
+
+  .popup {
+        position: fixed;
+        display: none;
+        width: 100%;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 20;
+        justify-content: center;
+        align-items: center;
+        background: rgba(0, 0, 0, .8);
+
+        &.active {
+            display: flex;
+        }
+    }
 }
 </style>
