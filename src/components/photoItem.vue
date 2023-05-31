@@ -1,9 +1,25 @@
 <template>
-    <button class="photo" @click="handlePhotoButton">
+    <div class="photo-wrap">
+      <button class="photo" @click="handlePhotoButton">
         <img
-          class="photo-img"
-          :src="photo.thumbnailUrl" :alt="photo.title">
-    </button>
+            class="photo-img"
+            :src="photo.thumbnailUrl" :alt="photo.title">
+      </button>
+      <button class="favorite" @click="handleFavoriteButton">
+        <img
+          v-show="!isFavorite"
+          class="fav-icon"
+          src="../assets/icons-star.png"
+          :alt="photo.title">
+          <!-- Хотел сделать один img и :src=" isFavorite ? одна звезда : другая"
+            но картинку не видно, не стал разбираться для быстроты -->
+          <img
+          v-show="isFavorite"
+          class="fav-icon"
+          src="../assets/icons-star-filled.png"
+          :alt="photo.title">
+      </button>
+    </div>
   </template>
 
 <script>
@@ -18,56 +34,117 @@ export default {
     },
   },
 
-  components: {
-  },
-
   data() {
     return {
       isOpen: false,
       photoList: null,
       isShowPhotos: false,
+      favorites: [],
+      isFavorite: false,
     };
   },
 
   methods: {
     handlePhotoButton() {
       const popup = document.querySelector('.popup');
-      const image = document.createElement('img');
-      const popupImage = document.querySelector('.popup-image');
+      popup.classList.add('active');
 
+      const popupImage = document.querySelector('.popup-image');
       if (popupImage) {
         popup.removeChild(popupImage);
       }
 
-      popup.classList.add('active');
-
+      const image = document.createElement('img');
       image.src = this.photo.url;
       image.alt = this.photo.title;
       image.classList.add('popup-image');
       image.style.borderRadius = '5px';
 
       popup.insertAdjacentElement('afterbegin', image);
-
-      console.log(popup);
     },
+
+    handleFavoriteButton() {
+      if (!this.isFavorite) {
+        this.getLocalFavorites();
+        this.favorites.push(this.photo);
+        localStorage.setItem('favorites', JSON.stringify(this.favorites));
+        this.isFavorite = true;
+      } else {
+        this.isFavorite = false;
+        this.getLocalFavorites();
+
+        if (this.favorites.length) {
+          for (let i = 0; i < this.favorites.length; i += 1) {
+            if (this.photo.id === this.favorites[i].id
+              && this.photo.albumId === this.favorites[i].albumId) {
+              this.favorites.splice(i, 1);
+              localStorage.setItem('favorites', JSON.stringify(this.favorites));
+            }
+          }
+        }
+      }
+    },
+
+    checkFavorite() {
+      if (this.favorites.length) {
+        for (let i = 0; i < this.favorites.length; i += 1) {
+          if (this.photo.id === this.favorites[i].id
+              && this.photo.albumId === this.favorites[i].albumId) {
+            this.isFavorite = true;
+            return;
+          }
+          this.isFavorite = false;
+        }
+      }
+    },
+
+    getLocalFavorites() {
+      if (localStorage.getItem('favorites')) {
+        this.favorites = JSON.parse(localStorage.getItem('favorites'));
+      }
+    },
+  },
+
+  mounted() {
+    this.getLocalFavorites();
+    console.log(this.favorites);
+    this.checkFavorite();
   },
 };
 </script>
   <style lang="scss" scoped>
-  .photo {
-    height: 150px;
-    width: 150px;
-    padding: 0;
-      .photo-button {
-
-          &:hover {
-          background-color: #dae4ef;
-        }
+  .photo-wrap {
+    position: relative;
+    .photo {
+      height: 150px;
+      width: 150px;
+      padding: 0;
+    }
+    .photo-button {
+      &:hover {
+        background-color: #dae4ef;
       }
+    }
+    .photo-img {
+      border-radius: 5px;
+    }
 
-      .photo-img {
-        border-radius: 5px;
-      }
+    .favorite {
+      position: absolute;
+      z-index: 10;
+      height: 35px;
+      width: 35px;
+      border-radius: 50%;
+      right: 10px;
+      top: 10px;
+      background-color: #fff;
+      display: flex;
+      justify-content: center;
+    }
+
+    .fav-icon {
+      width: 90%;
+    }
   }
 
   </style>
