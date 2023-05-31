@@ -35,6 +35,8 @@ button {
   border: none;
   background-color: unset;
   align-items: center;
+  padding: 0;
+  margin: 0;
 
   &:hover {
     background-color: #dae4ef;

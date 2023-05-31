@@ -10,14 +10,14 @@
           v-show="!isFavorite"
           class="fav-icon"
           src="../assets/icons-star.png"
-          :alt="photo.title">
+          alt="">
           <!-- Хотел сделать один img и :src=" isFavorite ? одна звезда : другая"
             но картинку не видно, не стал разбираться для быстроты -->
           <img
           v-show="isFavorite"
           class="fav-icon"
           src="../assets/icons-star-filled.png"
-          :alt="photo.title">
+          alt="">
       </button>
     </div>
   </template>
@@ -107,7 +107,6 @@ export default {
 
   mounted() {
     this.getLocalFavorites();
-    console.log(this.favorites);
     this.checkFavorite();
   },
 };
@@ -143,7 +142,7 @@ export default {
     }
 
     .fav-icon {
-      width: 90%;
+      width: 65%;
     }
   }
 
